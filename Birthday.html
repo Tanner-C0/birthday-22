@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Happy Birthday 🎉</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- iOS “app-like” meta -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <style>
+    :root {
+      --bg1: #ff5f6d;
+      --bg2: #ffc371;
+      --text-main: #ffffff;
+      --button-bg: #ffffff;
+      --button-text: #ff4b8b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Helvetica Neue", Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      color: var(--text-main);
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+      padding: 24px;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .title {
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+      animation: pop 1.4s ease-out infinite alternate;
+    }
+
+    .name {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-top: 10px;
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      margin-top: 12px;
+      opacity: 0.9;
+    }
+
+    .big-number {
+      font-size: 5rem;
+      font-weight: 900;
+      margin-top: 24px;
+      letter-spacing: 0.08em;
+      text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      animation: glow 2s ease-in-out infinite;
+    }
+
+    .button {
+      margin-top: 28px;
+      padding: 14px 24px;
+      border-radius: 999px;
+      border: none;
+      background: var(--button-bg);
+      color: var(--button-text);
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease,
+        opacity 0.12s ease;
+    }
+
+    .button:active {
+      transform: translateY(1px) scale(0.97);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+    }
+
+    .button.disabled {
+      opacity: 0.65;
+      cursor: default;
+    }
+
+    .hint {
+      margin-top: 12px;
+      font-size: 0.9rem;
+      opacity: 0.85;
+    }
+
+    .now-playing {
+      margin-top: 18px;
+      font-size: 0.95rem;
+      display: none;
+      opacity: 0.95;
+    }
+
+    .now-playing span {
+      font-weight: 600;
+    }
+
+    /* Confetti */
+    .confetti {
+      position: fixed;
+      top: -10vh;
+      left: 0;
+      width: 100%;
+      height: 120vh;
+      pointer-events: none;
+      overflow: visible;
+      z-index: -1;
+    }
+
+    .piece {
+      position: absolute;
+      width: 10px;
+      height: 16px;
+      border-radius: 2px;
+      opacity: 0.9;
+      animation: fall linear infinite;
+    }
+
+    /* Animations */
+    @keyframes fall {
+      0% {
+        transform: translate3d(0, -10vh, 0) rotateZ(0deg);
+      }
+      100% {
+        transform: translate3d(0, 110vh, 0) rotateZ(360deg);
+      }
+    }
+
+    @keyframes pop {
+      0% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes glow {
+      0% {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+      }
+      50% {
+        text-shadow: 0 0 25px rgba(255, 255, 255, 0.9);
+      }
+      100% {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+      }
+    }
+
+    @media (max-width: 400px) {
+      .title {
+        font-size: 2.1rem;
+      }
+      .big-number {
+        font-size: 4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="confetti" id="confetti"></div>
+
+  <div class="container">
+    <div class="title">Happy Birthday</div>
+    <!-- Edit this line with their name if you want -->
+    <div class="name" id="nameLine">To You 🎂</div>
+
+    <div class="big-number">22</div>
+
+    <p class="subtitle">
+      You’re in your Taylor Swift era now. Ready for your birthday song?
+    </p>
+
+    <button class="button" id="playButton">
+      <span>Tap to start your birthday surprise</span>
+      <span>🎵</span>
+    </button>
+
+    <p class="hint">
+      If nothing happens, make sure your volume is up and not on silent.
+    </p>
+
+    <p class="now-playing" id="nowPlaying">
+      Now playing: <span>“22” – Taylor Swift</span> 🎶
+    </p>
+
+    <!-- Hidden audio element (you provide the actual file URL) -->
+    <audio id="birthdayAudio" preload="auto"></audio>
+  </div>
+
+  <script>
+    // ==== CONFIG SECTION – EDIT THESE ====
+
+    // 1. Put the direct URL to an audio file for "22" here,
+    //    OR leave it empty to only open a streaming link.
+    const AUDIO_URL = "https://www.youtube.com/watch?v=AgFeZr5ptV8"; // e.g. "https://yourdomain.com/audio/22-birthday-edit.mp3"
+
+    // 2. Streaming link (Apple Music / Spotify / etc.) for "22"
+    const STREAMING_URL =
+      "https://music.apple.com/us/album/22/1440935467?i=1440935858";
+    // Replace with your preferred service if you want.
+
+    // 3. Optional: set the birthday person’s name here
+    const BIRTHDAY_NAME = "Fish Hilly"; // e.g. "Taylor"
+
+    // ==== END CONFIG SECTION ====
+
+    const playButton = document.getElementById("playButton");
+    const nowPlaying = document.getElementById("nowPlaying");
+    const audio = document.getElementById("birthdayAudio");
+    const nameLine = document.getElementById("nameLine");
+
+    if (BIRTHDAY_NAME && BIRTHDAY_NAME.trim().length > 0) {
+      nameLine.textContent = `Dear ${BIRTHDAY_NAME} 🎂`;
+    }
+
+    if (AUDIO_URL) {
+      audio.src = AUDIO_URL;
+    }
+
+    playButton.addEventListener("click", async () => {
+      playButton.classList.add("disabled");
+
+      try {
+        if (AUDIO_URL) {
+          // Try in-page audio first
+          await audio.play();
+          nowPlaying.style.display = "block";
+        } else {
+          // No audio file configured, go straight to streaming link
+          window.location.href = STREAMING_URL;
+        }
+      } catch (err) {
+        // If autoplay fails (browser rules), fall back to opening streaming app
+        window.location.href = STREAMING_URL;
+      }
+    });
+
+    // Generate simple confetti pieces
+    const confettiContainer = document.getElementById("confetti");
+    const colors = ["#ffe066", "#ff6b6b", "#f06595", "#74c0fc", "#b197fc"];
+
+    function createConfettiPiece() {
+      const piece = document.createElement("div");
+      piece.classList.add("piece");
+      const startLeft = Math.random() * 100; // vw
+      const delay = Math.random() * 5;
+      const duration = 4 + Math.random() * 4;
+
+      piece.style.left = startLeft + "vw";
+      piece.style.backgroundColor =
+        colors[Math.floor(Math.random() * colors.length)];
+      piece.style.animationDuration = duration + "s";
+      piece.style.animationDelay = delay + "s";
+
+      confettiContainer.appendChild(piece);
+    }
+
+    for (let i = 0; i < 80; i++) {
+      createConfettiPiece();
+    }
+  </script>
+</body>
+</html>
